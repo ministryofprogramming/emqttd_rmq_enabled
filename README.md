@@ -9,7 +9,7 @@ Current docker image size: 37.1 MB
 You can build this docker image by yourself.
 
 ```bash
-git clone -b master https://github.com/emqtt/emq_docker.git
+git clone -b master https://github.com/ministryofprogramming/emqttd_rmq_enabled.git
 cd emq_docker
 docker build -t emq:latest . 
 ```
@@ -191,7 +191,3 @@ docker run --rm -ti --name emq -p 18083:18083 -p 1883:1883 -p 4369:4369 \
 ```
 
 > REMEMBER: DO NOT RUN EMQ DOCKER PRIVILEGED OR MOUNT SYSTEM PROC IN CONTAINER TO TUNE LINUX KERNEL, IT IS UNSAFE.
-
-### Thanks
-
-@je-al https://github.com/emqtt/emq-docker/issues/2 The idea of variable names get mapped, dots get replaced by __.
