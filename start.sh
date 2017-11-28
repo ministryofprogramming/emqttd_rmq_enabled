@@ -63,27 +63,27 @@ if [[ -z "$EMQ_LOG__CONSOLE" ]]; then
 fi
 
 if [[ -z "$EMQ_LISTENER__TCP__EXTERNAL__ACCEPTORS" ]]; then
-    export EMQ_LISTENER__TCP__EXTERNAL__ACCEPTORS=64
+    export EMQ_LISTENER__TCP__EXTERNAL__ACCEPTORS=100000
 fi
 
 if [[ -z "$EMQ_LISTENER__TCP__EXTERNAL__MAX_CLIENTS" ]]; then
-    export EMQ_LISTENER__TCP__EXTERNAL__MAX_CLIENTS=1000000
+    export EMQ_LISTENER__TCP__EXTERNAL__MAX_CLIENTS=500000
 fi
 
 if [[ -z "$EMQ_LISTENER__SSL__EXTERNAL__ACCEPTORS" ]]; then
-    export EMQ_LISTENER__SSL__EXTERNAL__ACCEPTORS=32
+    export EMQ_LISTENER__SSL__EXTERNAL__ACCEPTORS=128
 fi
 
 if [[ -z "$EMQ_LISTENER__SSL__EXTERNAL__MAX_CLIENTS" ]]; then
-    export EMQ_LISTENER__SSL__EXTERNAL__MAX_CLIENTS=500000
+    export EMQ_LISTENER__SSL__EXTERNAL__MAX_CLIENTS=500
 fi
 
 if [[ -z "$EMQ_LISTENER__WS__EXTERNAL__ACCEPTORS" ]]; then
-    export EMQ_LISTENER__WS__EXTERNAL__ACCEPTORS=16
+    export EMQ_LISTENER__WS__EXTERNAL__ACCEPTORS=100000
 fi
 
 if [[ -z "$EMQ_LISTENER__WS__EXTERNAL__MAX_CLIENTS" ]]; then
-    export EMQ_LISTENER__WS__EXTERNAL__MAX_CLIENTS=250000
+    export EMQ_LISTENER__WS__EXTERNAL__MAX_CLIENTS=200000
 fi
 
 # Catch all EMQ_ prefix environment variable and match it in configure file
@@ -104,7 +104,7 @@ do
         if [[ ! -z "$(cat $CONFIG_PLUGINS/* |grep -E "^(^|^#*|^#*s*)$VAR_NAME")" ]]; then
             echo "$VAR_NAME=$(eval echo \$$VAR_FULL_NAME)"
             sed -r -i "s/(^#*\s*)($VAR_NAME)\s*=\s*(.*)/\2 = $(eval echo \$$VAR_FULL_NAME)/g" $(ls $CONFIG_PLUGINS/*)
-        fi        
+        fi
     fi
     # Config template such like {{ platform_etc_dir }}
     if [[ ! -z "$(echo $VAR | grep -E '^PLATFORM_')" ]]; then
@@ -195,7 +195,7 @@ fi
 #          and docker dispatching system can known and restart this container.
 IDLE_TIME=0
 while [[ $IDLE_TIME -lt 5 ]]
-do  
+do
     IDLE_TIME=$((IDLE_TIME+1))
     if [[ ! -z "$(/opt/emqttd/bin/emqttd_ctl status |grep 'is running'|awk '{print $1}')" ]]; then
         IDLE_TIME=0

@@ -2,7 +2,7 @@ FROM alpine:3.5
 
 MAINTAINER Huang Rui <vowstar@gmail.com>, Turtle <turtled@emqtt.io>
 
-ENV EMQ_VERSION=v2.3-beta.2
+ENV EMQ_VERSION=v2.3.0
 
 COPY ./start.sh /start.sh
 
@@ -78,7 +78,7 @@ RUN set -ex \
         ncurses-libs \
         readline \
     # add latest rebar
-    && git clone https://github.com/Zarathos94/emq-relx.git /emqttd \
+    && git clone -b ${EMQ_VERSION} https://github.com/Zarathos94/emq-relx.git /emqttd \
     && cd /emqttd \
     && make \
     && mkdir -p /opt && mv /emqttd/_rel/emqttd /opt/emqttd \
@@ -94,6 +94,13 @@ WORKDIR /opt/emqttd
 
 # start emqttd and initial environments
 CMD ["/opt/emqttd/start.sh"]
+
+RUN adduser -D -u 1000 emqtt
+
+RUN chgrp -Rf root /opt/emqttd && chmod -Rf g+w /opt/emqttd \
+      && chown -Rf emqtt /opt/emqttd
+
+USER emqtt
 
 VOLUME ["/opt/emqttd/log", "/opt/emqttd/data", "/opt/emqttd/lib", "/opt/emqttd/etc"]
 
