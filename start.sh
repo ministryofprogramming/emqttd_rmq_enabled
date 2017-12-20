@@ -162,6 +162,7 @@ do
     fi
 done
 
+
 echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:emqttd start"
 
 echo "Loading RMQ routing plugin..."
