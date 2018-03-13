@@ -121,10 +121,10 @@ echo "RMQ_PASS=${RMQ__PASS}"
 echo "RMQ_PORT=${RMQ__PORT}"
 #echo "RMQ_VHOST=${RMQ_VHOST}"
 #fi
-sed -i "/username/s/admin/${RMQ__USER}/" /opt/emqttd/etc/plugins/emqttd_plugin_kafka_bridge.conf
-sed -i "/password/s/admin/${RMQ__PASS}/" /opt/emqttd/etc/plugins/emqttd_plugin_kafka_bridge.conf
-sed -i "/host/s/10.1.7.130/${RMQ__HOST}/" /opt/emqttd/etc/plugins/emqttd_plugin_kafka_bridge.conf
-sed -i "/port/s/5672/${RMQ__PORT}/" /opt/emqttd/etc/plugins/emqttd_plugin_kafka_bridge.conf
+sed -i "/username/s/admin/${RMQ__USER}/" /opt/emqttd/etc/plugins/emq_rmq.conf
+sed -i "/password/s/admin/${RMQ__PASS}/" /opt/emqttd/etc/plugins/emq_rmq.conf
+sed -i "/host/s/10.1.7.130/${RMQ__HOST}/" /opt/emqttd/etc/plugins/emq_rmq.conf
+sed -i "/port/s/5672/${RMQ__PORT}/" /opt/emqttd/etc/plugins/emq_rmq.conf
 
 
 
@@ -166,7 +166,7 @@ done
 echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:emqttd start"
 
 echo "Loading RMQ routing plugin..."
-/opt/emqttd/bin/emqttd_ctl plugins load emqttd_plugin_kafka_bridge
+/opt/emqttd/bin/emqttd_ctl plugins load emq_rmq
 #echo "Loading HTTP Authorization plugin..."
 #/opt/emqttd/bin/emqttd_ctl plugins load emq_auth_http
 
