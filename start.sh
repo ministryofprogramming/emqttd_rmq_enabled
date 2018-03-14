@@ -96,15 +96,15 @@ do
         VAR_NAME=$(echo "$VAR" | sed -r "s/EMQ_(.*)=.*/\1/g" | tr '[:upper:]' '[:lower:]' | sed -r "s/__/\./g")
         VAR_FULL_NAME=$(echo "$VAR" | sed -r "s/(.*)=.*/\1/g")
         # Config in emq.conf
-        if [[ ! -z "$(cat $CONFIG |grep -E "^(^|^#*|^#*s*)$VAR_NAME")" ]]; then
+        if [[ ! -z "$(cat $CONFIG |grep -E "^(^|^#*|^#*\s*)$VAR_NAME")" ]]; then
             echo "$VAR_NAME=$(eval echo \$$VAR_FULL_NAME)"
-            sed -r -i "s/(^#*\s*)($VAR_NAME)\s*=\s*(.*)/\2 = $(eval echo \$$VAR_FULL_NAME)/g" $CONFIG
+            sed -r -i "s|(^#*\s*)($VAR_NAME)\s*=\s*(.*)|\2 = $(eval echo \$$VAR_FULL_NAME)|g" $CONFIG
         fi
         # Config in plugins/*
-        if [[ ! -z "$(cat $CONFIG_PLUGINS/* |grep -E "^(^|^#*|^#*s*)$VAR_NAME")" ]]; then
+        if [[ ! -z "$(cat $CONFIG_PLUGINS/* |grep -E "^(^|^#*|^#*\s*)$VAR_NAME")" ]]; then
             echo "$VAR_NAME=$(eval echo \$$VAR_FULL_NAME)"
             sed -r -i "s/(^#*\s*)($VAR_NAME)\s*=\s*(.*)/\2 = $(eval echo \$$VAR_FULL_NAME)/g" $(ls $CONFIG_PLUGINS/*)
-        fi
+        fi        
     fi
     # Config template such like {{ platform_etc_dir }}
     if [[ ! -z "$(echo $VAR | grep -E '^PLATFORM_')" ]]; then
@@ -113,25 +113,6 @@ do
         sed -r -i "s@\{\{\s*$VAR_NAME\s*\}\}@$(eval echo \$$VAR_FULL_NAME)@g" $CONFIG
     fi
 done
-echo 'Loaded RMQ Config [HOST: '${RMQ__HOST}' | PORT: '${RMQ__PORT}' | USER: '${RMQ__USER}' | PASS : '${RMQ__PASS}']'
-
-echo "RMQ_HOST=${RMQ__HOST}"
-echo "RMQ_USER=${RMQ__USER}"
-echo "RMQ_PASS=${RMQ__PASS}"
-echo "RMQ_PORT=${RMQ__PORT}"
-#echo "RMQ_VHOST=${RMQ_VHOST}"
-#fi
-sed -i "/username/s/admin/${RMQ__USER}/" /opt/emqttd/etc/plugins/emq_rmq.conf
-sed -i "/password/s/admin/${RMQ__PASS}/" /opt/emqttd/etc/plugins/emq_rmq.conf
-sed -i "/host/s/10.1.7.130/${RMQ__HOST}/" /opt/emqttd/etc/plugins/emq_rmq.conf
-sed -i "/port/s/5672/${RMQ__PORT}/" /opt/emqttd/etc/plugins/emq_rmq.conf
-
-
-
-echo "Loaded HTTP Config for HTTP authorization [ Auth URL: ${AUTH_URL} | Auth Superuser: ${AUTH_SUPERUSER} | Auth ACL: ${AUTH_ACL} ]"
-sed -i "/auth_req/s/127.0.0.1:8080/${AUTH_URL}/" /opt/emqttd/etc/plugins/emq_auth_http.conf
-sed -i "/super_req/s/127.0.0.1:8080/${AUTH_SUPERUSER}/" /opt/emqttd/etc/plugins/emq_auth_http.conf
-sed -i "/acl_req/s/127.0.0.1:8080/${AUTH_ACL}/" /opt/emqttd/etc/plugins/emq_auth_http.conf
 
 ## EMQ Plugin load settings
 # Plugins loaded by default
@@ -166,7 +147,7 @@ done
 echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:emqttd start"
 
 echo "Loading RMQ routing plugin..."
-/opt/emqttd/bin/emqttd_ctl plugins load emq_rmq
+/opt/emqttd/bin/emqttd_ctl plugins load emqttd_plugin_kafka_bridge
 #echo "Loading HTTP Authorization plugin..."
 #/opt/emqttd/bin/emqttd_ctl plugins load emq_auth_http
 
