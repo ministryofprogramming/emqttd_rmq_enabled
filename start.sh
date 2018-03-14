@@ -143,13 +143,7 @@ do
     fi
 done
 
-
 echo "['$(date -u +"%Y-%m-%dT%H:%M:%SZ")']:emqttd start"
-
-echo "Loading RMQ routing plugin..."
-/opt/emqttd/bin/emqttd_ctl plugins load emqttd_plugin_kafka_bridge
-#echo "Loading HTTP Authorization plugin..."
-#/opt/emqttd/bin/emqttd_ctl plugins load emq_auth_http
 
 # Run cluster script
 
