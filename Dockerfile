@@ -1,8 +1,9 @@
-FROM alpine:3.5
+FROM alpine:3.7
 
 MAINTAINER Huang Rui <vowstar@gmail.com>, Turtle <turtled@emqtt.io>
 
-ENV EMQ_VERSION=v2.3.0
+ENV REPO=https://github.com/Zarathos94/emq-relx.git
+ENV REPO_BRANCH=master
 
 COPY ./start.sh /start.sh
 
@@ -18,7 +19,7 @@ RUN set -ex \
         erlang-public-key \
         erlang-syntax-tools \
         erlang-erl-docgen \
-        erlang-gs \
+        #erlang-gs \
         erlang-observer \
         erlang-ssh \
         #erlang-ose \
@@ -41,7 +42,7 @@ RUN set -ex \
         erlang-et \
         erlang-cosnotification \
         erlang-xmerl \
-        erlang-typer \
+        #erlang-typer \
         erlang-coseventdomain \
         erlang-stdlib \
         erlang-diameter \
@@ -57,7 +58,7 @@ RUN set -ex \
         erlang-kernel \
         erlang-orber \
         erlang-costime \
-        erlang-percept \
+        #erlang-percept \
         erlang-dev \
         erlang-eldap \
         erlang-reltool \
@@ -78,7 +79,7 @@ RUN set -ex \
         ncurses-libs \
         readline \
     # add latest rebar
-    && git clone -b master https://github.com/Zarathos94/emq-relx.git /emqttd \
+    && git clone -b ${REPO_BRANCH} ${REPO} /emqttd \
     && cd /emqttd \
     && make \
     && mkdir -p /opt && mv /emqttd/_rel/emqttd /opt/emqttd \
